@@ -1,2 +1,2 @@
-# UFWork
-Coursework from UF undergrad
+# Undergrad Work
+Coursework from undergrad
