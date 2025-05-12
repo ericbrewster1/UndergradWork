@@ -1,0 +1,121 @@
+#include <iostream>
+#include <iomanip>
+#include <cmath> //used to round numbers later
+
+class Node {
+    public:
+        int value;
+        Node* next = nullptr;
+};
+
+Node* insertEnd(Node* head, int key)
+{
+    Node* temp = new Node();
+    temp->value = key;
+    if(head == nullptr)
+        head = temp;
+    else
+    {
+        Node* curr = head;
+        while(curr->next != nullptr)
+            curr = curr->next;
+        curr->next = temp;
+    }
+    return head;
+}
+
+
+float interQuartile(Node* head)
+{
+    int count = 0;
+    float median = 0;
+    bool evenElements = true;
+    Node* medianForLater = nullptr;
+    Node* fast = head;
+    Node* slow = head;
+    Node* superSlow = nullptr;
+    bool moveSlow = false;
+
+    while (fast != nullptr)
+    {
+        fast = fast->next;
+        if(moveSlow)
+        {
+            superSlow = slow;                
+            slow = slow->next;
+        }
+        moveSlow = !moveSlow;
+        count += 1;
+    }
+
+    if(count % 2 == 0)
+    {
+        medianForLater = superSlow;
+        median = (slow->value + superSlow->value) / 2.0;
+    }
+    else
+    {
+        medianForLater = slow;
+        median = slow->value;
+        evenElements = false;
+    }
+    //median found correctly
+
+    int lowerCount = 0;
+    Node* curr = head;
+    while(curr->value < int(median))
+    {
+        lowerCount += 1;
+        curr = curr->next;
+    }
+
+    float q1 = 0.0;
+    Node* temp = head; 
+    Node* temp2 = nullptr;
+
+    if(lowerCount % 2 != 0) //finds q1 correctly
+    {
+        int nums = round(lowerCount/2);
+        for(int i = 0; i < nums; i++)
+        {
+            temp = temp->next;            
+        }
+        q1 = temp -> value;
+    }
+    else //finds q1 correctly
+    {
+        int nums = lowerCount/2;
+        for(int i = 1; i < nums; i++)
+        {
+            temp = temp->next;
+        }
+        temp2 = temp->next;
+        q1 = (temp->value + temp2->value) / 2.0;
+    }
+
+    float q3 = 0.0;
+    Node* tempUpper = medianForLater; //needs to point to median
+    Node* tempUpper2 = nullptr;
+
+    if(lowerCount % 2 != 0) 
+    {
+        int nums = round(lowerCount/2);
+        for(int i = 0; i < nums + 1; i++)
+        {
+            tempUpper = tempUpper->next;            
+        }
+        q3 = tempUpper -> value;
+    }
+    else
+    {
+        int nums = lowerCount/2;
+        for(int i = 1; i < nums + 1; i++)
+        {
+            tempUpper = tempUpper->next;
+        }
+        tempUpper2 = tempUpper->next;
+        q3 = (tempUpper->value + tempUpper2->value) / 2.0;
+    }
+
+    return q3 - q1;  
+}

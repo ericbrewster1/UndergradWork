@@ -1,0 +1,51 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+
+int traverse(std::vector<std::string> &graph) 
+{
+	int rows = graph.size();
+	int cols = graph[0].length();
+	vector<pair<int, int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+	vector<vector<bool>> visited(rows, vector<bool>(cols, false));
+	queue<pair<int, int>> bfsQueue;
+
+	int startRow, startCol;
+	for(int i = 0; i < rows; ++i) {
+		for(int j = 0; j < cols; ++j) {
+			if(graph[i][j] == 's') {
+				startRow = i;
+				startCol = j;
+				break;
+			}
+		}
+	}
+	
+	bfsQueue.push({startRow, startCol});
+	visited[startRow][startCol] = true;
+
+	int steps = 0;
+	while(!bfsQueue.empty()) {
+		int size = bfsQueue.size();
+		for(int i = 0; i < size; ++i) {
+			int row = bfsQueue.front().first;
+			int col = bfsQueue.front().second;
+			bfsQueue.pop();
+			if(graph[row][col] == 't') {
+				return steps;
+			}
+			for(const auto& dir : directions) {
+				int newRow = row + dir.first;
+				int newCol = col + dir.second;
+				if(newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols
+				&& graph[newRow][newCol] != '#' && !visited[newRow][newCol]) {
+					bfsQueue.push({newRow, newCol});
+					visited[newRow][newCol] = true;
+				}
+			}
+		}
+		steps++;
+	}
+	return -1;
+}

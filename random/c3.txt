@@ -1,0 +1,71 @@
+#include <iostream>
+#include <iomanip>
+
+class Node {
+    public:
+        int value;
+        Node* next = nullptr;
+};
+
+Node* insertEnd(Node* head, int key)
+{
+    Node* temp = new Node();
+    temp->value = key;
+    if(head == nullptr)
+        head = temp;
+    else
+    {
+        Node* curr = head;
+        while(curr->next != nullptr)
+            curr = curr->next;
+        curr->next = temp;
+    }
+    return head;
+}
+
+float interQuartile(Node* head)
+{
+    Node* superSlow = head;
+    Node* slow = head->next;
+    Node* fast = head->next->next;
+    Node* superFast = head->next->next->next;
+    bool quartileOnNumber = false;
+    int numsPassed = 0;
+    float q1 = (float(superSlow->value) + float(slow->value)) / 2.0;
+    float q3 = (float(fast->value) + float(superFast->value)) / 2.0;
+    int count = 4;
+    float save = float(fast->value);
+
+    while(superFast->next != nullptr)
+    {
+        count += 1;
+        save = fast->value;
+        fast =  fast->next;
+        superFast= superFast->next;
+        if(count % 2 != 0 && !quartileOnNumber)
+        {
+            q1 = (float(superSlow->value) + float(slow->value)) / 2.0;
+            q3 = (float(fast->value) + float(superFast->value)) / 2.0;
+            quartileOnNumber = !quartileOnNumber;
+        }
+        else if(count % 2 != 0 && quartileOnNumber)
+        {
+            q1 = float(superSlow -> value);
+            q3 = float(fast -> value);
+            quartileOnNumber = !quartileOnNumber;
+        }
+        else if(count % 2 == 0 && !quartileOnNumber)
+        {
+            q1 = (float(superSlow->value) + float(slow->value)) / 2.0;
+            q3 = (save + float(fast->value)) / 2.0;
+        }
+        else if(count % 2 == 0 && quartileOnNumber)
+        {
+            superSlow = superSlow->next;
+            slow = slow->next;
+            q1 = float(superSlow -> value);
+            q3 = float(fast -> value);
+        }
+    }
+    return q3 - q1;   
+}

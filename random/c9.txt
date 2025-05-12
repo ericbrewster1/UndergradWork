@@ -1,0 +1,46 @@
+#include <iostream>
+#include <iomanip>
+
+class Node {
+    public:
+        int value;
+        Node* next = nullptr;
+};
+
+Node* insertEnd(Node* head, int key)
+{
+    Node* temp = new Node();
+    temp->value = key;
+    if(head == nullptr)
+        head = temp;
+    else
+    {
+        Node* curr = head;
+        while(curr->next != nullptr)
+            curr = curr->next;
+        curr->next = temp;
+    }
+    return head;
+}
+
+float interQuartile(Node* head)
+{
+    Node* superSlow = head;
+    Node* slow = head->next;
+    Node* fast = head->next->next;
+    Node* superFast = head->next->next->next;
+    float q1 = 0.0;
+    float q3 = 0.0;
+    int count = 4;
+
+    while(superFast->next != nullptr)
+    {
+        q1 = (float(superSlow->value) + float(slow->value)) / 2.0;
+        q3 = (float(fast->value) + float(superFast->value)) / 2.0;
+        superSlow = superSlow->next;
+        slow = slow->next; 
+        fast = fast->next; 
+        superFast = superFast->next;         
+    }
+    return q3 - q1;   
+}

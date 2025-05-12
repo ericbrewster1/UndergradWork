@@ -1,0 +1,34 @@
+//Programming Partner: 
+#include <iostream>
+using namespace std;
+
+//helper function to "heapify down"
+//when largest element is removed, need to move the replacing element
+//down to its correct place
+
+void heapifyDown(int arr[], int size, int index)
+{
+	int left = 2 * index + 1;
+	int right = 2 * index + 2;
+	int maxIndex = index;
+
+	if(left < size && arr[left] > arr[maxIndex]) { //left node is larger
+		maxIndex = left; //left node is the max
+	}
+	if(right < size && arr[right] > arr[maxIndex]) { //right node is larger
+		maxIndex = right; //right node is the max
+	}
+	if(maxIndex != index) { //swap is needed
+		swap(arr[index], arr[maxIndex]); //swap larger and smaller elements
+		heapifyDown(arr, size, maxIndex); //move the smaller node down if needed
+	}
+}
+
+int* extractMax(int arr[], int size)
+{
+	int max = arr[0]; //given a max heap, the largest element is the first in the array
+	arr[0] = arr[size - 1]; //remove this element, replace with last element in array
+	size -= 1; //size the array down to refelct the removed element
+	heapifyDown(arr, size, 0);
+	return arr; 
+}

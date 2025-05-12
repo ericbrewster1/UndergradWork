@@ -1,0 +1,70 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+using namespace std;
+
+class Graph
+{
+   private:
+      map<pair<int, int>, vector<int>> edges;
+      map<int, vector<int>> adjacencyList;
+
+    public:
+      void insertEdge(int from, int to, int weight);  
+      bool isEdge(int from, int to);  
+      int sumEdge(int from, int to); 
+      vector<int> getWeight(int from, int to); 
+      vector<int> getAdjacent(int vertex); 
+};
+
+void Graph::insertEdge(int from, int to, int weight) 
+{
+   edges[{from, to}].push_back(weight);
+   adjacencyList[from].push_back(to);
+}
+        
+bool Graph::isEdge(int from, int to) 
+{
+    if(edges.find({from, to}) == edges.end()) {
+        return false;
+    }
+    return true;
+}
+
+int Graph::sumEdge(int from, int to)
+{
+    if(isEdge(from, to)) {
+        vector<int> weights = edges[{from, to}];
+        int sum = 0;
+        for(int w: weights) {
+            sum += w;
+        }
+        return sum;
+    }
+    return 0;
+}
+
+vector<int> Graph::getWeight(int from, int to)
+{
+    if(isEdge(from, to)) {
+        vector<int> weights = edges[{from, to}];
+        sort(weights.begin(), weights.end());
+        return weights;
+    }
+    return vector<int>();
+}
+
+vector<int> Graph::getAdjacent(int vertex) 
+{
+    if(adjacencyList.find(vertex) != adjacencyList.end()) {
+        vector<int> adjacentVertices = adjacencyList[vertex];
+        sort(adjacentVertices.begin(), adjacentVertices.end());
+        return adjacentVertices;
+    }
+    return vector<int>();
+}
+
+
+ 

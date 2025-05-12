@@ -1,0 +1,16 @@
+#include <iostream>
+#include <string>
+
+int suffixCount(std::string S, int L) {
+	std::size_t temp = S.size();
+	int charsToSkip = static_cast<int>(temp) - L;
+	std::string suffix = S.substr(charsToSkip,L);
+	//std::cout << suffix (works)
+	int countOfSuffixes = 0;
+	std::size_t position = 0;
+	while((position = S.find(suffix, position)) != std::string::npos) {
+		countOfSuffixes += 1;
+		position += suffix.size();
+	}
+	return countOfSuffixes;
+}
